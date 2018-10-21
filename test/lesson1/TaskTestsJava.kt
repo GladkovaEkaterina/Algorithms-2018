@@ -1,8 +1,8 @@
 package lesson1
 
-import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Tag
+import java.io.File
 
 class TaskTestsJava : AbstractTaskTests() {
 
@@ -28,6 +28,26 @@ class TaskTestsJava : AbstractTaskTests() {
     @Tag("Normal")
     fun testSortSequence() {
         sortSequence { inputName, outputName -> JavaTasks.sortSequence(inputName, outputName) }
+    }
+
+    @Test
+    @Tag("Normal")
+    fun testSortSequence2() {
+        try {
+            JavaTasks.sortSequence("input/seq_in3.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                        4
+                        4
+                        1
+                        4
+                        3
+                        3
+                        3
+                    """.trimIndent())
+        } finally {
+            File("temp.txt").delete()
+        }
     }
 
     @Test
