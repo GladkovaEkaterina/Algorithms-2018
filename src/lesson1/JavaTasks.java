@@ -2,6 +2,10 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Scanner;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -130,7 +134,41 @@ public class JavaTasks {
      * 2
      */
     static public void sortSequence(String inputName, String outputName) {
-        throw new NotImplementedError();
+        try {
+            Scanner scan = new Scanner(new File(inputName));
+            int max = Integer.parseInt(scan.nextLine());
+            while (scan.hasNextLine()) {
+                int tmp = Integer.parseInt(scan.nextLine());
+                if (max < tmp) max = tmp;
+            }
+            int[] count = new int[max];
+            scan = new Scanner(new File(inputName));
+            while (scan.hasNextLine())
+                count[Integer.parseInt(scan.nextLine()) - 1]++;
+            int min = max;
+            max = -1;
+            for (int i = 0; i < count.length; i++) {
+                if (count[i] > max) {
+                    max = count[i];
+                    min = i + 1;
+                } else if (count[i] == max && i + 1 < min) {
+                    min = i + 1;
+                }
+            }
+            FileWriter writer = new FileWriter(new File(outputName));
+            scan = new Scanner(new File(inputName));
+            while (scan.hasNextLine()) {
+                String tmp = scan.nextLine();
+                if (!tmp.equals(Integer.toString(min)))
+                    writer.write(tmp + "\n");
+            }
+            writer.flush();
+            for (int i = 0; i < max; i++)
+                writer.write(Integer.toString(min) + "\n");
+            writer.flush();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -148,6 +186,23 @@ public class JavaTasks {
      * Результат: second = [1 3 4 9 9 13 15 20 23 28]
      */
     static <T extends Comparable<T>> void mergeArrays(T[] first, T[] second) {
-        throw new NotImplementedError();
+        int i = 0;
+        int j = 0;
+        int s = first.length;
+        while (i < first.length && s < second.length) {
+            if (first[i].compareTo(second[s]) < 1) {
+                second[j] = first[i];
+                i++;
+            } else {
+                second[j] = second[s];
+                s++;
+            }
+            j++;
+        }
+        while (i < first.length) {
+            second[j] = first[i];
+            i++;
+            j++;
+        }
     }
 }
