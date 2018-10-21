@@ -1,10 +1,14 @@
 package lesson1;
 
 import kotlin.NotImplementedError;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -40,6 +44,45 @@ public class JavaTasks {
         throw new NotImplementedError();
     }
 
+    static public void sortAddresses(String inputName, String outputName) throws IllegalAccessException {
+        Pattern p = Pattern.compile("^[А-Я][а-я]+ [А-Я][а-я]+ - [А-Я][а-я]+ \\d+$");
+        ArrayList<Adress> adress = new ArrayList<>();
+        try {
+            Scanner scan = new Scanner(new File(inputName));
+            while (scan.hasNextLine()) {
+                String st = scan.nextLine();
+                if (p.matcher(st).matches()) {
+                    String[] t = st.split(" ");
+                    adress.add(new Adress(t[3], Integer.parseInt(t[4]), t[0], t[1]));
+                } else throw new IllegalAccessException();
+            }
+            Collections.sort(adress);
+            FileWriter writer = new FileWriter(new File(outputName));
+            String street = null;
+            Integer num = 0;
+            boolean flag = false;
+            StringBuilder builder = new StringBuilder();
+            for (Adress a : adress) {
+                if (street == null || !street.equals(a.street) || !num.equals(a.num)) {
+                    if (street != null) {
+                        writer.write(builder.append("\n").toString());
+                        writer.flush();
+                    }
+                    street = a.street;
+                    num = a.num;
+                    builder = new StringBuilder();
+                    builder.append(street).append(" ").append(num).append(" - ").append(a.sname)
+                            .append(" ").append(a.name);
+                } else
+                    builder.append(", ").append(a.sname).append(" ").append(a.name);
+            }
+            writer.write(builder.append("\n").toString());
+            writer.flush();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Сортировка адресов
      *
@@ -66,8 +109,32 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortAddresses(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static class Adress implements Comparable<Adress> {
+        String street;
+        Integer num;
+        String sname;
+        String name;
+
+        public Adress(String street, Integer num, String sname, String name) {
+            this.street = street;
+            this.num = num;
+            this.sname = sname;
+            this.name = name;
+        }
+
+        @Override
+        public int compareTo(@NotNull Adress o) {
+            if (street.compareTo(o.street) != 0)
+                return street.compareTo(o.street);
+            if (num.compareTo(o.num) != 0)
+                return num.compareTo(o.num);
+            if (sname.compareTo(o.sname) != 0)
+                return sname.compareTo(o.sname);
+            if (name.compareTo(o.name) != 0)
+                return name.compareTo(o.name);
+            else
+                return 0;
+        }
     }
 
     /**
