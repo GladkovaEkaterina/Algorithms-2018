@@ -46,23 +46,23 @@ public class JavaTasks {
 
     static public void sortAddresses(String inputName, String outputName) throws IllegalAccessException {
         Pattern p = Pattern.compile("^[А-Я][а-я]+ [А-Я][а-я]+ - [А-Я][а-я]+ \\d+$");
-        ArrayList<Adress> adress = new ArrayList<>();
+        ArrayList<Address> address = new ArrayList<>();
         try {
             Scanner scan = new Scanner(new File(inputName));
             while (scan.hasNextLine()) {
                 String st = scan.nextLine();
                 if (p.matcher(st).matches()) {
                     String[] t = st.split(" ");
-                    adress.add(new Adress(t[3], Integer.parseInt(t[4]), t[0], t[1]));
+                    address.add(new Address(t[3], Integer.parseInt(t[4]), t[0], t[1]));
                 } else throw new IllegalAccessException();
             }
-            Collections.sort(adress);
+            Collections.sort(address);
             FileWriter writer = new FileWriter(new File(outputName));
             String street = null;
             Integer num = 0;
             boolean flag = false;
             StringBuilder builder = new StringBuilder();
-            for (Adress a : adress) {
+            for (Address a : address) {
                 if (street == null || !street.equals(a.street) || !num.equals(a.num)) {
                     if (street != null) {
                         writer.write(builder.append("\n").toString());
@@ -109,13 +109,13 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static class Adress implements Comparable<Adress> {
+    static class Address implements Comparable<Address> {
         String street;
         Integer num;
         String sname;
         String name;
 
-        public Adress(String street, Integer num, String sname, String name) {
+        public Address(String street, Integer num, String sname, String name) {
             this.street = street;
             this.num = num;
             this.sname = sname;
@@ -123,7 +123,7 @@ public class JavaTasks {
         }
 
         @Override
-        public int compareTo(@NotNull Adress o) {
+        public int compareTo(@NotNull Address o) {
             if (street.compareTo(o.street) != 0)
                 return street.compareTo(o.street);
             if (num.compareTo(o.num) != 0)
