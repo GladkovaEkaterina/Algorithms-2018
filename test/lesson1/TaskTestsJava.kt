@@ -21,6 +21,23 @@ class TaskTestsJava : AbstractTaskTests() {
 
     @Test
     @Tag("Normal")
+    fun testSortAddresses2() {
+        try {
+            JavaTasks.sortAddresses("input/addr_in2.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                        Житная 5 - Иванова Мария
+                        Житная 8 - Сидоров Василий
+                        Кораблестроителей 9 - Васильева Настя
+                        Политехническая 3 - Иванов Кирилл
+                    """.trimIndent())
+        } finally {
+            File("temp.txt").delete()
+        }
+    }
+
+    @Test
+    @Tag("Normal")
     fun testSortTemperatures() {
         sortTemperatures { inputName, outputName -> JavaTasks.sortTemperatures(inputName, outputName) }
     }
