@@ -96,8 +96,92 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
+    /*static State[] st = new State [1000000];
+    static int size, last;
+    static class State {
+        int length;
+        int link;
+        Map<Character, Integer> next;
+    }
+
+    static private void sa_init(){
+        size = 0;
+        last = 0;
+        for (int i = 0; i < st.length; i++) {
+            st[i] = new State();
+            st[i].next = new HashMap<>();
+        }
+        st[0].length = 0;
+        st[0].link = - 1;
+        size++;
+    }
+
+    static private void sa_extend(char c){
+        int cur = size++;
+        st[cur].length = st[last].length + 1;
+        int p;
+        for (p = last; p != -1 && !st[p].next.containsValue(c); p = st[p].link)
+            st[p].next.put(c, cur);
+        if (p == -1) st[cur].link = 0;
+        else {
+            int q = st[p].next.get(c);
+            if (st[p].length + 1 == st[q].length)
+                st[cur].link = q;
+            else {
+                int clone = size++;
+                st[clone].length = st[p].length + 1;
+                st[clone].next = st[q].next;
+                st[clone].link = st[q].link;
+                for(; p != -1 && st[p].next.get(c) == q; p = st[p].link)
+                    st[p].next.put(c, clone);
+                st[q].link = st[cur].link;
+                st[cur].link = clone;
+            }
+        }
+        last = cur;
+    }
     static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+    sa_init();
+    for (int i = 0; i < firs.length(); ++i)
+        sa_extend(firs.charAt(i));
+    int v = 0;
+    int l = 0;
+    int best = 0;
+    int bestPos = 0;
+    for (int i = 0; i < second.length(); ++i){
+        while (v != 0 && !st[v].next.containsKey(second.charAt(i))){
+            v = st[v].link;
+            l = st[v].length;
+        }
+        if (st[v].next.containsValue(second.charAt(i))){
+            v = st[v].next.get(second.charAt(i));
+            ++l;
+        }
+        if (l > best) {
+            best = l;
+            bestPos = i;
+        }
+    }
+    if (bestPos == 0)  return "";
+    return firs.substring(bestPos - best + 1, best);
+    }*/
+    static public String longestCommonSubstring(String firs, String second) {
+        int start = 0;
+        int m = 0;
+        for (int i = 0; i < firs.length(); i++) {
+            for (int j = 0; j < second.length(); j++) {
+                int x = 0;
+                while (firs.charAt(i + x) == second.charAt(j + x)) {
+                    x++;
+                    if (((i + x) >= firs.length()) || ((j + x) >= second.length())) break;
+                }
+                if (x > m) {
+                    m = x;
+                    start = i;
+                }
+            }
+        }
+        return firs.substring(start, (start + m));
     }
 
     /**
