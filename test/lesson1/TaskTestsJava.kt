@@ -25,11 +25,11 @@ class TaskTestsJava : AbstractTaskTests() {
         sortTemperatures { inputName, outputName -> JavaTasks.sortTemperatures(inputName, outputName) }
     }
 
-    /*@Test
+    @Test
     @Tag("Normal")
     fun testSortTemperatures2() {
         try {
-            JavaTasks.sortSequence("input/temp_in2.txt", "temp.txt")
+            JavaTasks.sortTemperatures("input/temp_in2.txt", "temp.txt")
             assertFileContent("temp.txt",
                     """
                         -87.7
@@ -43,7 +43,7 @@ class TaskTestsJava : AbstractTaskTests() {
             File("temp.txt").delete()
         }
     }
-*/
+
 
     @Test
     @Tag("Normal")
