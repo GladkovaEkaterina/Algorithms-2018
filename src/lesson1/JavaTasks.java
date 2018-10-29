@@ -6,9 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
@@ -162,29 +160,27 @@ public class JavaTasks {
      * 3
      * 1
      * 2
-     * 2
+     * 2A
      * 2
      */
-    static public void sortSequence(String inputName, String outputName) {
-        try {
+    static public void sortSequence(String inputName, String outputName) throws IOException {
+        TreeMap<Integer, Integer> count = new TreeMap<>();
             Scanner scan = new Scanner(new File(inputName));
-            int max = Integer.parseInt(scan.nextLine());
-            while (scan.hasNextLine()) {
-                int tmp = Integer.parseInt(scan.nextLine());
-                if (max < tmp) max = tmp;
+        while (scan.hasNextLine()) {
+            int t = Integer.valueOf(scan.nextLine());
+            if (count.containsKey(t))
+                count.put(t, count.get(t) + 1);
+            else
+                count.put(t, 1);
             }
-            int[] count = new int[max];
-            scan = new Scanner(new File(inputName));
-            while (scan.hasNextLine())
-                count[Integer.parseInt(scan.nextLine()) - 1]++;
-            int min = max;
-            max = -1;
-            for (int i = 0; i < count.length; i++) {
-                if (count[i] > max) {
-                    max = count[i];
-                    min = i + 1;
-                } else if (count[i] == max && i + 1 < min) {
-                    min = i + 1;
+        int min = count.lastKey();
+        int max = -1;
+        for (Map.Entry<Integer, Integer> i : count.entrySet()) {
+            if (i.getValue() > max) {
+                max = i.getValue();
+                min = i.getKey();
+            } else if (i.getValue() == max && i.getKey() < min) {
+                min = i.getKey();
                 }
             }
             FileWriter writer = new FileWriter(new File(outputName));
@@ -198,10 +194,9 @@ public class JavaTasks {
             for (int i = 0; i < max; i++)
                 writer.write(Integer.toString(min) + "\n");
             writer.close();
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
+
     }
+
 
     /**
      * Соединить два отсортированных массива в один
