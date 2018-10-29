@@ -43,45 +43,6 @@ public class JavaTasks {
         throw new NotImplementedError();
     }
 
-    static public void sortAddresses(String inputName, String outputName) throws IllegalAccessException {
-        Pattern p = Pattern.compile("^[А-Я][а-я]+ [А-Я][а-я]+ - [А-Я][а-я]+ \\d+$");
-        ArrayList<Address> address = new ArrayList<>();
-        try {
-            Scanner scan = new Scanner(new File(inputName));
-            while (scan.hasNextLine()) {
-                String st = scan.nextLine();
-                if (p.matcher(st).matches()) {
-                    String[] t = st.split(" ");
-                    address.add(new Address(t[3], Integer.parseInt(t[4]), t[0], t[1]));
-                } else throw new IllegalAccessException();
-            }
-            Collections.sort(address);
-            FileWriter writer = new FileWriter(new File(outputName));
-            String street = null;
-            Integer num = 0;
-            boolean flag = false;
-            StringBuilder builder = new StringBuilder();
-            for (Address a : address) {
-                if (street == null || !street.equals(a.street) || !num.equals(a.num)) {
-                    if (street != null) {
-                        writer.write(builder.append("\n").toString());
-                        writer.flush();
-                    }
-                    street = a.street;
-                    num = a.num;
-                    builder = new StringBuilder();
-                    builder.append(street).append(" ").append(num).append(" - ").append(a.sname)
-                            .append(" ").append(a.name);
-                } else
-                    builder.append(", ").append(a.sname).append(" ").append(a.name);
-            }
-            writer.write(builder.append("\n").toString());
-            writer.flush();
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Сортировка температур
      * <p>
@@ -111,6 +72,7 @@ public class JavaTasks {
      * 24.7
      * 99.5
      * 121.3
+     * Сложность O(n), ресурсоемкость O(1) (потому что в задаии указан диапозон значений)
      */
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
         int min = -2730;
@@ -120,7 +82,7 @@ public class JavaTasks {
         Scanner scan = new Scanner(new File(inputName));
         while (scan.hasNextLine()) {
             Double d = Double.parseDouble(scan.nextLine()) * 10;
-            Integer tmp = d.intValue();
+            int tmp = d.intValue();
             help[tmp - min]++;
         }
         FileWriter writer = new FileWriter(new File(outputName));
@@ -160,8 +122,9 @@ public class JavaTasks {
      * 3
      * 1
      * 2
-     * 2A
      * 2
+     * 2
+     * Сложность O(n + k), ресурсоемкость O(k) (где k - количество последовательностей)
      */
     static public void sortSequence(String inputName, String outputName) throws IOException {
         TreeMap<Integer, Integer> count = new TreeMap<>();
@@ -211,6 +174,7 @@ public class JavaTasks {
      * second = [null null null null null 1 3 9 13 18 23]
      * <p>
      * Результат: second = [1 3 4 9 9 13 15 20 23 28]
+     * сложность средняя O(n), худшая O(m+n). Ресурсоемкость O(1)
      */
     static <T extends Comparable<T>> void mergeArrays(T[] first, T[] second) {
         int i = 0;
@@ -284,6 +248,46 @@ public class JavaTasks {
                 return name.compareTo(o.name);
             else
                 return 0;
+        }
+    }
+
+    //сложность O(n logn), ресурсоемкость O(n)
+    static public void sortAddresses(String inputName, String outputName) throws IllegalAccessException {
+        Pattern p = Pattern.compile("^[А-Я][а-я]+ [А-Я][а-я]+ - [А-Я][а-я]+ \\d+$");
+        ArrayList<Address> address = new ArrayList<>();
+        try {
+            Scanner scan = new Scanner(new File(inputName));
+            while (scan.hasNextLine()) {
+                String st = scan.nextLine();
+                if (p.matcher(st).matches()) {
+                    String[] t = st.split(" ");
+                    address.add(new Address(t[3], Integer.parseInt(t[4]), t[0], t[1]));
+                } else throw new IllegalAccessException();
+            }
+            Collections.sort(address);
+            FileWriter writer = new FileWriter(new File(outputName));
+            String street = null;
+            Integer num = 0;
+            boolean flag = false;
+            StringBuilder builder = new StringBuilder();
+            for (Address a : address) {
+                if (street == null || !street.equals(a.street) || !num.equals(a.num)) {
+                    if (street != null) {
+                        writer.write(builder.append("\n").toString());
+                        writer.flush();
+                    }
+                    street = a.street;
+                    num = a.num;
+                    builder = new StringBuilder();
+                    builder.append(street).append(" ").append(num).append(" - ").append(a.sname)
+                            .append(" ").append(a.name);
+                } else
+                    builder.append(", ").append(a.sname).append(" ").append(a.name);
+            }
+            writer.write(builder.append("\n").toString());
+            writer.flush();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
     }
 }

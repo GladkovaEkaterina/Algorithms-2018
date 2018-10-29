@@ -13,34 +13,6 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
     /**
-     * Балда
-     * Сложная
-     * <p>
-     * В файле с именем inputName задана матрица из букв в следующем формате
-     * (отдельные буквы в ряду разделены пробелами):
-     * <p>
-     * И Т Ы Н
-     * К Р А Н
-     * А К В А
-     * <p>
-     * В аргументе words содержится множество слов для поиска, например,
-     * ТРАВА, КРАН, АКВА, НАРТЫ, РАК.
-     * <p>
-     * Попытаться найти каждое из слов в матрице букв, используя правила игры БАЛДА,
-     * и вернуть множество найденных слов. В данном случае:
-     * ТРАВА, КРАН, АКВА, НАРТЫ
-     * <p>
-     * И т Ы Н     И т ы Н
-     * К р а Н     К р а н
-     * А К в а     А К В А
-     * <p>
-     * Все слова и буквы -- русские или английские, прописные.
-     * В файле буквы разделены пробелами, строки -- переносами строк.
-     * Остальные символы ни в файле, ни в словах не допускаются.
-     */
-    static ArrayList<String[]> worksheet = new ArrayList<>();
-
-    /**
      * Получение наибольшей прибыли (она же -- поиск максимального подмассива)
      * Простая
      * <p>
@@ -115,6 +87,22 @@ public class JavaAlgorithms {
      * Х х Х
      */
     static public int josephTask(int menNumber, int choiceInterval) {
+        throw new NotImplementedError();
+    }
+
+    static ArrayList<String[]> worksheet = new ArrayList<>();
+
+    /**
+     * Число простых чисел в интервале
+     * Простая
+     * <p>
+     * Рассчитать количество простых чисел в интервале от 1 до limit (включительно).
+     * Если limit <= 1, вернуть результат 0.
+     * <p>
+     * Справка: простым считается число, которое делится нацело только на 1 и на себя.
+     * Единица простым числом не считается.
+     */
+    static public int calcPrimesNumber(int limit) {
         throw new NotImplementedError();
     }
 
@@ -198,18 +186,20 @@ public class JavaAlgorithms {
     if (bestPos == 0)  return "";
     return firs.substring(bestPos - best + 1, best);
     }*/
+
+    //сложность O(mn), ресурсоемкость O(1)
     static public String longestCommonSubstring(String firs, String second) {
         int start = 0;
         int m = 0;
         for (int i = 0; i < firs.length(); i++) {
             for (int j = 0; j < second.length(); j++) {
-                int x = 0;
-                while (firs.charAt(i + x) == second.charAt(j + x)) {
-                    x++;
-                    if (((i + x) >= firs.length()) || ((j + x) >= second.length())) break;
+                int c = 0;
+                while (firs.charAt(i + c) == second.charAt(j + c)) {
+                    c++;
+                    if (((i + c) >= firs.length()) || ((j + c) >= second.length())) break;
                 }
-                if (x > m) {
-                    m = x;
+                if (c > m) {
+                    m = c;
                     start = i;
                 }
             }
@@ -218,19 +208,35 @@ public class JavaAlgorithms {
     }
 
     /**
-     * Число простых чисел в интервале
-     * Простая
+     * Балда
+     * Сложная
      * <p>
-     * Рассчитать количество простых чисел в интервале от 1 до limit (включительно).
-     * Если limit <= 1, вернуть результат 0.
+     * В файле с именем inputName задана матрица из букв в следующем формате
+     * (отдельные буквы в ряду разделены пробелами):
      * <p>
-     * Справка: простым считается число, которое делится нацело только на 1 и на себя.
-     * Единица простым числом не считается.
+     * И Т Ы Н
+     * К Р А Н
+     * А К В А
+     * <p>
+     * В аргументе words содержится множество слов для поиска, например,
+     * ТРАВА, КРАН, АКВА, НАРТЫ, РАК.
+     * <p>
+     * Попытаться найти каждое из слов в матрице букв, используя правила игры БАЛДА,
+     * и вернуть множество найденных слов. В данном случае:
+     * ТРАВА, КРАН, АКВА, НАРТЫ
+     * <p>
+     * И т Ы Н     И т ы Н
+     * К р а Н     К р а н
+     * А К в а     А К В А
+     * <p>
+     * Все слова и буквы -- русские или английские, прописные.
+     * В файле буквы разделены пробелами, строки -- переносами строк.
+     * Остальные символы ни в файле, ни в словах не допускаются.
+     *
+     *
+     *
+     * сложность O(mn * 4^z), ресурсоемкость O(mn) где mn-размеры игрового поля, z - количество слов
      */
-    static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
-    }
-
     static public Set<String> baldaSearcher(String inputName, Set<String> words) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(inputName));
         while (scanner.hasNextLine())
