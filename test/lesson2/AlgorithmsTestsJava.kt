@@ -27,6 +27,7 @@ class AlgorithmsTestsJava : AbstractAlgorithmsTests() {
     @Tag("Normal")
     fun testLongestCommonSubstring2() {
         assertEquals("ривет, меня зовут ", JavaAlgorithms.longestCommonSubstring("Привет, меня зовут Катя", "привет, меня зовут катя"))
+        assertEquals("яблоко ", JavaAlgorithms.longestCommonSubstring("яблоко киви_ананас арбуз", "яблоко мандарин ананас "))
     }
 
     @Test

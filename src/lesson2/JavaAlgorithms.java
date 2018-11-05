@@ -196,7 +196,8 @@ public class JavaAlgorithms {
                 int c = 0;
                 while (firs.charAt(i + c) == second.charAt(j + c)) {
                     c++;
-                    if (((i + c) >= firs.length()) || ((j + c) >= second.length())) break;
+                    if (((i + c) >= firs.length()) || ((j + c) >= second.length()))
+                        break;
                 }
                 if (c > m) {
                     m = c;
@@ -240,12 +241,12 @@ public class JavaAlgorithms {
     static public Set<String> baldaSearcher(String inputName, Set<String> words) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(inputName));
         while (scanner.hasNextLine())
-            worksheet.add(scanner.nextLine().split(" "));
+            worksheet.add(scanner.nextLine().toUpperCase().split(" "));
         Set<String> res = new HashSet<>();
         for (int i = 0; i < worksheet.size(); i++)
             for (int j = 0; j < worksheet.get(i).length; j++) {
                 for (String word : words) {
-                    String tst = recBalda(j, i, word);
+                    String tst = recBalda(j, i, word.toUpperCase());
                     if (tst != null) res.add(tst);
                 }
                 words.removeAll(res);
