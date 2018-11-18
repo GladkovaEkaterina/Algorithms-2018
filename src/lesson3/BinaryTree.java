@@ -63,6 +63,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     /**
      * Удаление элемента в дереве
      * Средняя
+     *
+     * Трудоемкость O(h), Ресурсоемкость O(1)
      */
     @Override
     public boolean remove(Object o) {
@@ -127,6 +129,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         private Node<T> current = null;
         private ArrayList<Node<T>> content = new ArrayList<>();
 
+        //Ресурсоемкость O(n), Трудоемкость O(n)
         private BinaryTreeIterator() {
             Node<T> node = root;
             Stack<Node<T>> nodes = new Stack<>();
@@ -167,6 +170,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         /**
          * Поиск следующего элемента
          * Средняя
+         *
+         * Трудоемкость O(1), Ресурсоемкость O(1)
          */
         private Node<T> findNext() {
             try {
@@ -191,6 +196,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         /**
          * Удаление следующего элемента
          * Сложная
+         *
+         * Трудоемкость O(h^2), Ресурсоемкость O(1)
          */
         @Override
         public void remove() {

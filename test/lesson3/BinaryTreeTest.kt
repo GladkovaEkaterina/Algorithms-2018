@@ -97,6 +97,14 @@ class BinaryTreeTest {
         testRemove { createJavaTree() }
     }
 
+    @Test
+    fun testRemove2() {
+        val bin = createJavaTree<Int>()
+        bin.addAll(listOf(24, 59, 2, 59, 55, 98, 11, 60, 90, 13, 8, 45, 46, 30, 23, 66, 81, 58, 58, 63))
+        bin.remove(66)
+        assertFalse(bin.contains(66))
+    }
+
     private fun testIterator(create: () -> CheckableSortedSet<Int>) {
         val random = Random()
         for (iteration in 1..100) {
@@ -129,6 +137,15 @@ class BinaryTreeTest {
     @Tag("Normal")
     fun testIteratorJava() {
         testIterator { createJavaTree() }
+    }
+
+    @Test
+    fun testIterator2() {
+        val bin = createJavaTree<Int>()
+        bin.addAll(listOf(24, 59, 2, 59, 55, 98, 11, 60, 90, 13, 8, 45, 46, 30, 23, 66, 81, 58, 58, 63))
+        val it = bin.iterator()
+        while (it.hasNext())
+            it.next()
     }
 
     private fun testIteratorRemove(create: () -> CheckableSortedSet<Int>) {
