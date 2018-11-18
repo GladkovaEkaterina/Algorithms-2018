@@ -66,10 +66,34 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+        if (!contains(o)) return false;
+        this.root = delete(root, (T) o);
+        size--;
+        return contains(o);
     }
 
+    private Node<T> delete(Node<T> root, T value) {
+        if (root != null) {
+            int c = value.compareTo(root.value);
+            if (c < 0)
+                root.left = delete(root.left, value);
+            else if (c > 0)
+                root.right = delete(root.right, value);
+            else if (root.left != null && root.right != null) {
+                Node<T> min = root.right;
+                while (min.left != null)
+                    min = min.left;
+                Node<T> newRoot = new Node<>(min.value);
+                newRoot.right = delete(root.right, min.value);
+                newRoot.left = root.left;
+                return newRoot;
+            } else if (root.right == null)
+                root = root.left;
+            else
+                root = root.right;
+        }
+        return root;
+    }
     @Override
     public boolean contains(Object o) {
         @SuppressWarnings("unchecked")
@@ -101,16 +125,56 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     public class BinaryTreeIterator implements Iterator<T> {
 
         private Node<T> current = null;
+        private ArrayList<Node<T>> content = new ArrayList<>();
 
-        private BinaryTreeIterator() {}
+        private BinaryTreeIterator() {
+            Node<T> node = root;
+            Stack<Node<T>> nodes = new Stack<>();
+            int mode = 1;
+            do {
+                switch (mode) {
+                    case 1:
+                        mode = 2;
+                        break;
+                    case 2:
+                        if (node.left != null) {
+                            nodes.push(node);
+                            node = node.left;
+                        } else
+                            mode = 3;
+                        break;
+                    case 3:
+                        content.add(node);
+                        if (node.right != null) {
+                            nodes.push(node);
+                            node = node.right;
+                            mode = 2;
+                        } else
+                            mode = 4;
+                        break;
+                    case 4:
+                        if (nodes.empty()) mode = 1;
+                        else if (nodes.peek().left == node) {
+                            node = nodes.pop();
+                            mode = 3;
+                        } else if (nodes.peek().right == node)
+                            node = nodes.pop();
+                        break;
+                }
+            } while (mode != 1);
+        }
 
         /**
          * Поиск следующего элемента
          * Средняя
          */
         private Node<T> findNext() {
-            // TODO
-            throw new NotImplementedError();
+            try {
+                current = content.remove(0);
+            } catch (IndexOutOfBoundsException ex) {
+                return null;
+            }
+            return current;
         }
 
         @Override
@@ -120,7 +184,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         @Override
         public T next() {
-            current = findNext();
             if (current == null) throw new NoSuchElementException();
             return current.value;
         }
@@ -131,8 +194,24 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          */
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            if (root == current)
+                root = BinaryTree.this.delete(root, next());
+            else {
+                Node<T> p = getParent();
+                p = BinaryTree.this.delete(getParent(), current.value);
+            }
+            size--;
+        }
+
+        private Node<T> getParent() {
+            Node<T> tNode = root;
+            while (tNode.left != current && tNode.right != current) {
+                if (tNode.value.compareTo(current.value) > 0)
+                    tNode = tNode.left;
+                else
+                    tNode = tNode.right;
+            }
+            return tNode;
         }
     }
 

@@ -1,8 +1,8 @@
 package lesson3
 
 import org.junit.jupiter.api.Tag
-import kotlin.test.Test
 import java.util.*
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -78,6 +78,14 @@ class BinaryTreeTest {
     }
 
     @Test
+    fun testRemove() {
+        val bin = createJavaTree<Int>()
+        bin.addAll(listOf(24, 59, 2, 59, 55, 98, 11, 60, 90, 13, 8, 45, 46, 30, 23, 66, 81, 58, 58, 63))
+        bin.remove(66)
+        assertTrue(bin.checkInvariant())
+    }
+
+    @Test
     @Tag("Normal")
     fun testRemoveKotlin() {
         testRemove { createKotlinTree() }
@@ -105,7 +113,7 @@ class BinaryTreeTest {
             val treeIt = treeSet.iterator()
             val binaryIt = binarySet.iterator()
             println("Traversing $list")
-            while (treeIt.hasNext()) {
+            while (binaryIt.hasNext()) {
                 assertEquals(treeIt.next(), binaryIt.next())
             }
         }
