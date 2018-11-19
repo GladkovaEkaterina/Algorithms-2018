@@ -1,7 +1,9 @@
 package lesson3
 
-import java.util.SortedSet
-import kotlin.test.*
+import java.util.*
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 abstract class AbstractHeadTailTest {
     private lateinit var tree: SortedSet<Int>
@@ -94,7 +96,18 @@ abstract class AbstractHeadTailTest {
     }
 
     protected fun doSubSetTest() {
-        TODO()
+        val set: SortedSet<Int> = tree.subSet(2, 5)
+        assertEquals(3, set.size)
+        assertEquals(10, tree.size)
+        tree.add(11)
+        assertFalse(set.contains(11))
+        val iter = set.iterator()
+        while (iter.hasNext())
+            iter.remove()
+        assertEquals(0, set.size)
+        assertEquals(8, tree.size)
+        for (i in 2 until 5)
+            assertFalse(tree.contains(i))
     }
 
 }

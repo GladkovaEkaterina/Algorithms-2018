@@ -1,6 +1,5 @@
 package lesson3;
 
-import kotlin.NotImplementedError;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +23,18 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
     private Node<T> root = null;
 
+    private T from = null, to = null;
+
     private int size = 0;
+
+    public BinaryTree() {
+    }
+
+    private BinaryTree(Node<T> node, T from, T to) {
+        this.root = node;
+        this.from = from;
+        this.to = to;
+    }
 
     @Override
     public boolean add(T t) {
@@ -36,12 +46,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         Node<T> newNode = new Node<>(t);
         if (closest == null) {
             root = newNode;
-        }
-        else if (comparison < 0) {
+        } else if (comparison < 0) {
             assert closest.left == null;
             closest.left = newNode;
-        }
-        else {
+        } else {
             assert closest.right == null;
             closest.right = newNode;
         }
@@ -63,7 +71,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     /**
      * Удаление элемента в дереве
      * Средняя
-     *
+     * <p>
      * Трудоемкость O(h), Ресурсоемкость O(1)
      */
     @Override
@@ -96,12 +104,16 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         }
         return root;
     }
+
     @Override
     public boolean contains(Object o) {
         @SuppressWarnings("unchecked")
         T t = (T) o;
-        Node<T> closest = find(t);
-        return closest != null && t.compareTo(closest.value) == 0;
+        if ((from == null || from.compareTo(t) <= 0)
+                && (to == null || to.compareTo(t) > 0)) {
+            Node<T> closest = find(t);
+            return closest != null && t.compareTo(closest.value) == 0;
+        } else return false;
     }
 
     private Node<T> find(T value) {
@@ -113,15 +125,69 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         int comparison = value.compareTo(start.value);
         if (comparison == 0) {
             return start;
-        }
-        else if (comparison < 0) {
+        } else if (comparison < 0) {
             if (start.left == null) return start;
             return find(start.left, value);
-        }
-        else {
+        } else {
             if (start.right == null) return start;
             return find(start.right, value);
         }
+    }
+
+    @Override
+    public int size() {
+        int res = 0;
+        for (T ignored : this)
+            res++;
+        return res;
+    }
+
+    @NotNull
+    @Override
+    public Iterator<T> iterator() {
+        return new BinaryTreeIterator();
+    }
+
+    /**
+     * Для этой задачи нет тестов (есть только заготовка subSetTest), но её тоже можно решить и их написать
+     * Очень сложная
+     * <p>
+     * ресурсоемкость O(n-m) n - верхняя граница, m - нижняя, трудоемкость O(1)
+     */
+    @NotNull
+    @Override
+    public SortedSet<T> subSet(T fromElement, T toElement) {
+        return new BinaryTree(root, fromElement, toElement);
+    }
+
+    @Nullable
+    @Override
+    public Comparator<? super T> comparator() {
+        return null;
+    }
+
+    /**
+     * Найти множество всех элементов меньше заданного
+     * Сложная
+     * <p>
+     * ресурсоемкость O(n - m) n - все узлы, m - кол-во узлов, подходящих по условию), трудоемкость O(1)
+     */
+    @NotNull
+    @Override
+    public SortedSet<T> headSet(T toElement) {
+        return new BinaryTree(root, null, toElement);
+    }
+
+    /**
+     * Найти множество всех элементов больше или равных заданного
+     * Сложная
+     * <p>
+     * ресурсоемкость O(n - m) n - все узлы, m - кол-во узлов, подходящих по условию, трудоемкость O(1)
+     */
+    @NotNull
+    @Override
+    public SortedSet<T> tailSet(T fromElement) {
+        return new BinaryTree(root, fromElement, null);
     }
 
     public class BinaryTreeIterator implements Iterator<T> {
@@ -147,7 +213,9 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                             mode = 3;
                         break;
                     case 3:
-                        content.add(node);
+                        if ((from == null || from.compareTo(node.value) <= 0)
+                                && (to == null || to.compareTo(node.value) > 0))
+                            content.add(node);
                         if (node.right != null) {
                             nodes.push(node);
                             node = node.right;
@@ -170,7 +238,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         /**
          * Поиск следующего элемента
          * Средняя
-         *
+         * <p>
          * Трудоемкость O(1), Ресурсоемкость O(1)
          */
         private Node<T> findNext() {
@@ -196,12 +264,12 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         /**
          * Удаление следующего элемента
          * Сложная
-         *
+         * <p>
          * Трудоемкость O(h^2), Ресурсоемкость O(1)
          */
         @Override
         public void remove() {
-            if (root == current)
+            if (root.value == current.value)
                 root = BinaryTree.this.delete(root, next());
             else {
                 Node<T> p = getParent();
@@ -220,57 +288,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             }
             return tNode;
         }
-    }
-
-    @NotNull
-    @Override
-    public Iterator<T> iterator() {
-        return new BinaryTreeIterator();
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-
-    @Nullable
-    @Override
-    public Comparator<? super T> comparator() {
-        return null;
-    }
-
-    /**
-     * Для этой задачи нет тестов (есть только заготовка subSetTest), но её тоже можно решить и их написать
-     * Очень сложная
-     */
-    @NotNull
-    @Override
-    public SortedSet<T> subSet(T fromElement, T toElement) {
-        // TODO
-        throw new NotImplementedError();
-    }
-
-    /**
-     * Найти множество всех элементов меньше заданного
-     * Сложная
-     */
-    @NotNull
-    @Override
-    public SortedSet<T> headSet(T toElement) {
-        // TODO
-        throw new NotImplementedError();
-    }
-
-    /**
-     * Найти множество всех элементов больше или равных заданного
-     * Сложная
-     */
-    @NotNull
-    @Override
-    public SortedSet<T> tailSet(T fromElement) {
-        // TODO
-        throw new NotImplementedError();
     }
 
     @Override
