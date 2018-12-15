@@ -12,6 +12,12 @@ class DynamicTestsJava : AbstractDynamicTests() {
     }
 
     @Test
+    @Tag("Normal")
+    fun testLongestCommonSubSequence2() {
+        longestCommonSubSequence2 { first, second -> JavaDynamicTasks.longestCommonSubSequence(first, second) }
+    }
+
+    @Test
     @Tag("Hard")
     fun testLongestIncreasingSubSequence() {
         longestIncreasingSubSequence { JavaDynamicTasks.longestIncreasingSubSequence(it) }
@@ -21,5 +27,11 @@ class DynamicTestsJava : AbstractDynamicTests() {
     @Tag("Hard")
     fun testShortestPathOnField() {
         shortestPathOnField { JavaDynamicTasks.shortestPathOnField(it) }
+    }
+
+    @Test
+    @Tag("Hard")
+    fun testShortestPathOnField2() {
+        shortestPathOnField2 { JavaDynamicTasks.shortestPathOnField(it) }
     }
 }
