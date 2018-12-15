@@ -21,7 +21,7 @@ public class JavaDynamicTasks {
      * Если общей подпоследовательности нет, вернуть пустую строку.
      * При сравнении подстрок, регистр символов *имеет* значение.
      *
-     * трудоемкость O(nm), где n, m — размеры строк, ресурсоемкость O(nm)
+     * трудоемкость O(nm), ресурсоемкость O(nm)
      */
     public static String longestCommonSubSequence(String first, String second) {
         int[][] max_len = new int[first.length() + 1][second.length() + 1];
