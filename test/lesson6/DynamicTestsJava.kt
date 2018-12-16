@@ -25,6 +25,12 @@ class DynamicTestsJava : AbstractDynamicTests() {
 
     @Test
     @Tag("Hard")
+    fun testLongestIncreasingSubSequence2() {
+        longestIncreasingSubSequence2 { JavaDynamicTasks.longestIncreasingSubSequence(it) }
+    }
+
+    @Test
+    @Tag("Hard")
     fun testShortestPathOnField() {
         shortestPathOnField { JavaDynamicTasks.shortestPathOnField(it) }
     }
