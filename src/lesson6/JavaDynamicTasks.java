@@ -55,35 +55,35 @@ public class JavaDynamicTasks {
      * Если самых длинных возрастающих подпоследовательностей несколько (как в примере),
      * то вернуть ту, в которой числа расположены раньше (приоритет имеют первые числа).
      * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
+     * Трудоемкость O(n^2), Ресурсоемкость O(n)
      */
     //РЕШЕНИЕ ЭТОГО ЗАДАНИЯ В ПРОЦЕССЕ, пока что не отправляю его
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
         if (list.size() < 2) return list;
         int n = list.size();
-        int[] prev = new int[n];
-        int[] d = new int[n];
+        int[] ind = new int[n];
+        int[] dim = new int[n];
         for (int i = 0; i < n; i++) {
-            d[i] = 1;
-            prev[i] = -1;
+            dim[i] = 1;
+            ind[i] = -1;
             for (int j = 0; j < i; j++)
                 if (list.get(j) < list.get(i))
-                    if (1 + d[j] > d[i]) {
-                        d[i] = d[j] + 1;
-                        prev[i] = j;
+                    if (1 + dim[j] > dim[i]) {
+                        dim[i] = dim[j] + 1;
+                        ind[i] = j;
                     }
         }
-        int pos = 0;                            // индекс последнего элемента НВП
-        int length = d[0];                      // длина НВП
+        int pos = 0;
+        int length = dim[0];
         for (int i = 0; i < n; i++)
-            if (d[i] > length) {
+            if (dim[i] > length) {
                 pos = i;
-                length = d[i];
+                length = dim[i];
             }
-        // восстановление ответа
         ArrayList<Integer> answer = new ArrayList<>();
         while (pos != -1) {
             answer.add(list.get(pos));
-            pos = prev[pos];
+            pos = ind[pos];
         }
         Collections.reverse(answer);
 
