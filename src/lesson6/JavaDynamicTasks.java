@@ -1,10 +1,9 @@
 package lesson6;
 
-import kotlin.NotImplementedError;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,14 +12,14 @@ public class JavaDynamicTasks {
     /**
      * Наибольшая общая подпоследовательность.
      * Средняя
-     *
+     * <p>
      * Дано две строки, например "nematode knowledge" и "empty bottle".
      * Найти их самую длинную общую подпоследовательность -- в примере это "emt ole".
      * Подпоследовательность отличается от подстроки тем, что её символы не обязаны идти подряд
      * (но по-прежнему должны быть расположены в исходной строке в том же порядке).
      * Если общей подпоследовательности нет, вернуть пустую строку.
      * При сравнении подстрок, регистр символов *имеет* значение.
-     *
+     * <p>
      * трудоемкость O(nm), ресурсоемкость O(nm)
      */
     public static String longestCommonSubSequence(String first, String second) {
@@ -44,10 +43,11 @@ public class JavaDynamicTasks {
         }
         return result.toString();
     }
+
     /**
      * Наибольшая возрастающая подпоследовательность
      * Средняя
-     *
+     * <p>
      * Дан список целых чисел, например, [2 8 5 9 12 6].
      * Найти в нём самую длинную возрастающую подпоследовательность.
      * Элементы подпоследовательности не обязаны идти подряд,
@@ -58,46 +58,72 @@ public class JavaDynamicTasks {
      */
     //РЕШЕНИЕ ЭТОГО ЗАДАНИЯ В ПРОЦЕССЕ, пока что не отправляю его
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
-        throw new NotImplementedError();
+        if (list.size() < 2) return list;
+        int n = list.size();
+        int[] prev = new int[n];
+        int[] d = new int[n];
+        for (int i = 0; i < n; i++) {
+            d[i] = 1;
+            prev[i] = -1;
+            for (int j = 0; j < i; j++)
+                if (list.get(j) < list.get(i))
+                    if (1 + d[j] > d[i]) {
+                        d[i] = d[j] + 1;
+                        prev[i] = j;
+                    }
+        }
+        int pos = 0;                            // индекс последнего элемента НВП
+        int length = d[0];                      // длина НВП
+        for (int i = 0; i < n; i++)
+            if (d[i] > length) {
+                pos = i;
+                length = d[i];
+            }
+        // восстановление ответа
+        ArrayList<Integer> answer = new ArrayList<>();
+        while (pos != -1) {
+            answer.add(list.get(pos));
+            pos = prev[pos];
+        }
+        Collections.reverse(answer);
+
+        return answer;
     }
 
     /**
      * Самый короткий маршрут на прямоугольном поле.
      * Сложная
-     *
+     * <p>
      * В файле с именем inputName задано прямоугольное поле:
-     *
+     * <p>
      * 0 2 3 2 4 1
      * 1 5 3 4 6 2
      * 2 6 2 5 1 3
      * 1 4 3 2 6 2
      * 4 2 3 1 5 0
-     *
+     * <p>
      * Можно совершать шаги длиной в одну клетку вправо, вниз или по диагонали вправо-вниз.
      * В каждой клетке записано некоторое натуральное число или нуль.
      * Необходимо попасть из верхней левой клетки в правую нижнюю.
      * Вес маршрута вычисляется как сумма чисел со всех посещенных клеток.
      * Необходимо найти маршрут с минимальным весом и вернуть этот минимальный вес.
-     *
+     * <p>
      * Здесь ответ 2 + 3 + 4 + 1 + 2 = 12
-     *
+     * <p>
      * трудоемкость O(nm), где n, m — размеры строк, ресурсое мкость O(nm)
      */
-    public static int shortestPathOnField(String inputName) {
+    public static int shortestPathOnField(String inputName) throws FileNotFoundException {
         ArrayList<int[]> desk = new ArrayList<>();
-        try (Scanner sc = new Scanner(new File(inputName))) {
-            int r = 0;
-            while (sc.hasNextLine()) {
-                String[] nums = sc.nextLine().split(" ");
-                desk.add(new int[nums.length]);
-                int i = 0;
-                for (String n : nums) {
-                    desk.get(r)[i++] = Integer.valueOf(n);
-                }
-                r++;
+        Scanner sc = new Scanner(new File(inputName));
+        int r = 0;
+        while (sc.hasNextLine()) {
+            String[] nums = sc.nextLine().split(" ");
+            desk.add(new int[nums.length]);
+            int i = 0;
+            for (String n : nums) {
+                desk.get(r)[i++] = Integer.valueOf(n);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            r++;
         }
         int[][] work = new int[desk.size()][desk.get(0).length];
         for (int y = desk.size() - 1; y >= 0; y--) {
